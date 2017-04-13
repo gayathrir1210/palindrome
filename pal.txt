@@ -1,0 +1,89 @@
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+bool CheckPalindrome(string str)
+{
+    int left = -1;
+    int right = str.size();
+    
+    while(left++ <= right--)
+    { 
+        if(str[left] != str[right])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<int> AlphabetsToDelete(string str)
+{
+    int left = -1;
+    int right = str.size();
+    vector<int> candidates;
+    
+    while(left++ <= right--)
+    {
+        if(str[left] != str[right])
+        {
+            candidates.push_back(left);
+            candidates.push_back(right);
+            return candidates;
+        }
+    }
+    return candidates;
+}
+
+string CreatePalindrome(int candidate, string str)
+{
+    string new_string = "";
+    for(int i = 0; i < str.size();i++)
+    {
+        if(i == candidate)
+        {
+            continue;
+        }
+        new_string+= str[i];
+    }
+    return new_string;
+}
+
+int CheckRemoval(string str)
+{
+    bool isPalindrome = CheckPalindrome(str);
+    string candidateStr = "";
+    if(isPalindrome)
+        return -1;
+    
+    vector<int> candidates = AlphabetsToDelete(str);
+    
+    for(auto candidate : candidates)
+    {
+        candidateStr = CreatePalindrome(candidate,str);
+        isPalindrome = CheckPalindrome(candidateStr);
+        
+        if(isPalindrome)
+        {
+            return candidate;
+        }        
+    }
+    return -1; 
+}
+
+int main() {
+    int testCase;
+    string str;
+    int output;
+    
+    cin>>testCase;
+    while(testCase-- > 0)
+    {
+        cin>>str;
+        output = CheckRemoval(str);
+        cout<<output<<endl;
+    }
+    
+    return 0;
+}
